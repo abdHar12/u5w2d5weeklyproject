@@ -19,7 +19,7 @@ public class EmployeeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.FOUND)
-    public Page<Employee> getAllEmployees(
+    public Page<Employee> getAllElements(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String orderBy
