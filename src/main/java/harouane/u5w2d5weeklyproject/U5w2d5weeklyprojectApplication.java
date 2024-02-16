@@ -2,6 +2,7 @@ package harouane.u5w2d5weeklyproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 public class U5w2d5weeklyprojectApplication {

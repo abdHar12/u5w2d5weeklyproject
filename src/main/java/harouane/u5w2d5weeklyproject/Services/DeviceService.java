@@ -1,11 +1,9 @@
 package harouane.u5w2d5weeklyproject.Services;
 
-import harouane.u5w2d5weeklyproject.Controllers.DeviceController;
 import harouane.u5w2d5weeklyproject.DAOs.DeviceDAO;
+import harouane.u5w2d5weeklyproject.DAOs.EmployeeDAO;
 import harouane.u5w2d5weeklyproject.DTOs.DeviceDTOs.CreationDevicePayload;
-import harouane.u5w2d5weeklyproject.DTOs.EmployeePayload;
 import harouane.u5w2d5weeklyproject.Entities.Device;
-import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Enums.DeviceState;
 import harouane.u5w2d5weeklyproject.Exceptions.BadRequestException;
 import harouane.u5w2d5weeklyproject.Exceptions.NotFoundElements;
@@ -18,13 +16,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class DeviceService {
     @Autowired
     DeviceDAO deviceDAO;
+    @Autowired
+    EmployeeService employeeService;
     public Page<Device> getAll(int page, int size, String orderBy) {
         if(size>100) size=100;
         Pageable pageable= PageRequest.of(page, size, Sort.by(orderBy));
@@ -58,5 +56,14 @@ public class DeviceService {
     public void deleteElement(int id) {
         Device device=this.findById(id);
         deviceDAO.delete(device);
+    }
+
+    public Device setNewOwner(int deviceId, int employeeId) {
+        Device device=this.findById(deviceId);
+        if(!(device.getState()==DeviceState.AVAILABLE))
+            throw new BadRequestException("Il device non può essere assegnato. Si trova nello stato: " + device.getState());
+        device.setEmployee(employeeService.findById(employeeId));
+        device.setState(DeviceState.ASSIGNED);
+        return deviceDAO.save(device);
     }
 }

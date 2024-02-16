@@ -1,8 +1,10 @@
 package harouane.u5w2d5weeklyproject.Controllers;
 
 import harouane.u5w2d5weeklyproject.DTOs.EmployeePayload;
+import harouane.u5w2d5weeklyproject.Entities.Device;
 import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Exceptions.BadRequestException;
+import harouane.u5w2d5weeklyproject.Services.DeviceService;
 import harouane.u5w2d5weeklyproject.Services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.PatchExchange;
 
 @RestController
 @RequestMapping("/employees")
@@ -17,6 +20,8 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
+    @Autowired
+    DeviceService deviceService;
     @GetMapping
     @ResponseStatus(HttpStatus.FOUND)
     public Page<Employee> getAllElements(
@@ -52,4 +57,13 @@ public class EmployeeController {
     void deleteElement(@PathVariable int id){
         employeeService.deleteElement(id);
     }
+
+    @PostMapping("/{employeeId}/assign-device/{deviceId}")
+    Device assignNewDevice(
+            @PathVariable int employeeId,
+            @PathVariable int deviceId
+    ){
+      return deviceService.setNewOwner(deviceId, employeeId);
+    }
+
 }
