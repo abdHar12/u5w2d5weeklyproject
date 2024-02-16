@@ -62,6 +62,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/{employeeId}/assign-device/{deviceId}")
+    @ResponseStatus(HttpStatus.OK)
     Device assignNewDevice(
             @PathVariable int employeeId,
             @PathVariable int deviceId
@@ -70,6 +71,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/upload")
+    @ResponseStatus(HttpStatus.OK)
     Employee uploadImgOfAvatar(@RequestParam("avatar") MultipartFile image, @PathVariable int id) throws IOException {
         return this.employeeService.uploadImage(image, id);
     }

@@ -5,6 +5,7 @@ import harouane.u5w2d5weeklyproject.DTOs.DevicePayload;
 import harouane.u5w2d5weeklyproject.Entities.Device;
 import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Enums.DeviceState;
+import harouane.u5w2d5weeklyproject.Enums.DeviceType;
 import harouane.u5w2d5weeklyproject.Exceptions.BadRequestException;
 import harouane.u5w2d5weeklyproject.Exceptions.NotFoundElements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,15 @@ public class DeviceService {
     }
 
     public Device saveNewElement(DevicePayload newDevice) {
-        List<String> list=new ArrayList<>(List.of("AVAILABLE", "ASSIGNED", "DISMISSED", "IN_MAINTENANCE"));
-        if(!list.contains(newDevice.getState().toUpperCase()))
+        List<String> list1=new ArrayList<>(List.of("AVAILABLE", "ASSIGNED", "DISMISSED", "IN_MAINTENANCE"));
+        if(!list1.contains(newDevice.getState().toUpperCase()))
             throw new BadRequestException("Gli stati da impostare possono essere scritti solo nei seguenti modi: AVAILABLE, ASSIGNED, DISMISSED, IN_MAINTENANCE");
         DeviceState state= DeviceState.valueOf(newDevice.getState().toUpperCase());
-        Device device=new Device(newDevice.getType(), state);
+        List<String> list2=new ArrayList<>(List.of("TABLET", "PHONE", "PC"));
+        if(!list2.contains(newDevice.getType().toUpperCase()))
+            throw new BadRequestException("Il tipo di device può essere: TABLET, PHONE, PC");
+        DeviceType type= DeviceType.valueOf(newDevice.getType().toUpperCase());
+        Device device=new Device(type, state);
         return deviceDAO.save(device);
     }
 
@@ -49,7 +54,10 @@ public class DeviceService {
         if(!list.contains(newDevice.getState().toUpperCase()))
             throw new BadRequestException("Gli stati da impostare possono essere scritti solo nei seguenti modi: AVAILABLE, ASSIGNED, DISMISSED, IN_MAINTENANCE");
         DeviceState state= DeviceState.valueOf(newDevice.getState().toUpperCase());
-        device.setType(newDevice.getType());
+        List<String> list2=new ArrayList<>(List.of("TABLET", "PHONE", "PC"));
+        if(!list2.contains(newDevice.getType().toUpperCase()))
+            throw new BadRequestException("Il tipo di device può essere: TABLET, PHONE, PC");
+        device.setType(DeviceType.valueOf(newDevice.getType()));
         if(!(state==DeviceState.ASSIGNED)) device.setEmployee(null);
         device.setState(state);
         return deviceDAO.save(device);

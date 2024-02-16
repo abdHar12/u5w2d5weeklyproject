@@ -1,6 +1,7 @@
 package harouane.u5w2d5weeklyproject.Entities;
 
 import harouane.u5w2d5weeklyproject.Enums.DeviceState;
+import harouane.u5w2d5weeklyproject.Enums.DeviceType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,14 +18,15 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    String type;
+    @Enumerated(EnumType.STRING)
+    DeviceType type;
     @Enumerated(EnumType.STRING)
     DeviceState state;
     @ManyToOne
     @JoinColumn(name = "employee_id")
     Employee employee;
 
-    public Device(String type, DeviceState state) {
+    public Device(DeviceType type, DeviceState state) {
         this.type = type;
         this.state = state;
     }
