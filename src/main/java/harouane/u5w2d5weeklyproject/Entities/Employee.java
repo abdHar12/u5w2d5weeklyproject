@@ -22,8 +22,8 @@ public class Employee {
     private String username;
     private String email;
     private String name;
-    private String Surname;
-
+    private String surname;
+    private String avatar;
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     List<Device> devices;
@@ -32,6 +32,7 @@ public class Employee {
         this.username = username;
         this.email = email;
         this.name = name;
-        Surname = surname;
+        this.surname = surname;
+        this.avatar= "https://ui-avatars.com/api/?name" + name + "+" + surname;
     }
 }
