@@ -61,7 +61,7 @@ public class EmployeeController {
         employeeService.deleteElement(id);
     }
 
-    @PostMapping("/{employeeId}/assign-device/{deviceId}")
+    @PatchMapping("/{employeeId}/assign-device/{deviceId}")
     @ResponseStatus(HttpStatus.OK)
     Device assignNewDevice(
             @PathVariable int employeeId,
