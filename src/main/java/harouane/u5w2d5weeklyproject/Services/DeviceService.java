@@ -1,8 +1,7 @@
 package harouane.u5w2d5weeklyproject.Services;
 
 import harouane.u5w2d5weeklyproject.DAOs.DeviceDAO;
-import harouane.u5w2d5weeklyproject.DAOs.EmployeeDAO;
-import harouane.u5w2d5weeklyproject.DTOs.DeviceDTOs.CreationDevicePayload;
+import harouane.u5w2d5weeklyproject.DTOs.DevicePayload;
 import harouane.u5w2d5weeklyproject.Entities.Device;
 import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Enums.DeviceState;
@@ -35,7 +34,7 @@ public class DeviceService {
         return deviceDAO.findById(id).orElseThrow(()->new NotFoundElements("L'id "+ id+ " non è stato trovato"));
     }
 
-    public Device saveNewElement(CreationDevicePayload newDevice) {
+    public Device saveNewElement(DevicePayload newDevice) {
         List<String> list=new ArrayList<>(List.of("AVAILABLE", "ASSIGNED", "DISMISSED", "IN_MAINTENANCE"));
         if(!list.contains(newDevice.getState().toUpperCase()))
             throw new BadRequestException("Gli stati da impostare possono essere scritti solo nei seguenti modi: AVAILABLE, ASSIGNED, DISMISSED, IN_MAINTENANCE");
@@ -44,15 +43,16 @@ public class DeviceService {
         return deviceDAO.save(device);
     }
 
-    public Device modifyElement(int id, CreationDevicePayload newDevice) {
+    public Device modifyElement(int id, DevicePayload newDevice) {
         Device device=this.findById(id);
         List<String> list=new ArrayList<>(List.of("AVAILABLE", "ASSIGNED", "DISMISSED", "IN_MAINTENANCE"));
         if(!list.contains(newDevice.getState().toUpperCase()))
             throw new BadRequestException("Gli stati da impostare possono essere scritti solo nei seguenti modi: AVAILABLE, ASSIGNED, DISMISSED, IN_MAINTENANCE");
         DeviceState state= DeviceState.valueOf(newDevice.getState().toUpperCase());
         device.setType(newDevice.getType());
+        if(!(state==DeviceState.ASSIGNED)) device.setEmployee(null);
         device.setState(state);
-        return device;
+        return deviceDAO.save(device);
     }
     public void deleteElement(int id) {
         Device device=this.findById(id);

@@ -18,6 +18,7 @@ public class Device {
     @Column(name = "id", nullable = false)
     private Long id;
     String type;
+    @Enumerated(EnumType.STRING)
     DeviceState state;
     @ManyToOne
     @JoinColumn(name = "employee_id")

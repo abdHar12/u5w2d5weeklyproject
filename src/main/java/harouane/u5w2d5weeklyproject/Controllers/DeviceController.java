@@ -1,12 +1,9 @@
 package harouane.u5w2d5weeklyproject.Controllers;
 
-import harouane.u5w2d5weeklyproject.DTOs.DeviceDTOs.CreationDevicePayload;
-import harouane.u5w2d5weeklyproject.DTOs.EmployeePayload;
+import harouane.u5w2d5weeklyproject.DTOs.DevicePayload;
 import harouane.u5w2d5weeklyproject.Entities.Device;
-import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Exceptions.BadRequestException;
 import harouane.u5w2d5weeklyproject.Services.DeviceService;
-import harouane.u5w2d5weeklyproject.Services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -37,14 +34,14 @@ public class DeviceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Device postNewElement(@RequestBody @Validated CreationDevicePayload newDevice, BindingResult validation){
+    public Device postNewElement(@RequestBody @Validated DevicePayload newDevice, BindingResult validation){
         if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         return deviceService.saveNewElement(newDevice);
     }
 
     @PutMapping ("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    Device modifyElement(@PathVariable int id, @RequestBody @Validated CreationDevicePayload newDevice, BindingResult validation){
+    Device modifyElement(@PathVariable int id, @RequestBody @Validated DevicePayload newDevice, BindingResult validation){
         if(validation.hasErrors()) throw new BadRequestException(validation.getAllErrors());
         return deviceService.modifyElement(id, newDevice);
     }
