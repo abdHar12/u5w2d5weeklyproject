@@ -4,6 +4,7 @@ import harouane.u5w2d5weeklyproject.DAOs.DeviceDAO;
 import harouane.u5w2d5weeklyproject.DAOs.EmployeeDAO;
 import harouane.u5w2d5weeklyproject.DTOs.DeviceDTOs.CreationDevicePayload;
 import harouane.u5w2d5weeklyproject.Entities.Device;
+import harouane.u5w2d5weeklyproject.Entities.Employee;
 import harouane.u5w2d5weeklyproject.Enums.DeviceState;
 import harouane.u5w2d5weeklyproject.Exceptions.BadRequestException;
 import harouane.u5w2d5weeklyproject.Exceptions.NotFoundElements;
@@ -62,7 +63,8 @@ public class DeviceService {
         Device device=this.findById(deviceId);
         if(!(device.getState()==DeviceState.AVAILABLE))
             throw new BadRequestException("Il device non può essere assegnato. Si trova nello stato: " + device.getState());
-        device.setEmployee(employeeService.findById(employeeId));
+        Employee employee=employeeService.findById(employeeId);
+        device.setEmployee(employee);
         device.setState(DeviceState.ASSIGNED);
         return deviceDAO.save(device);
     }

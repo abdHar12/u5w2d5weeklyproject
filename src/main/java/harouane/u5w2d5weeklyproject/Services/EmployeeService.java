@@ -1,5 +1,7 @@
 package harouane.u5w2d5weeklyproject.Services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import harouane.u5w2d5weeklyproject.DAOs.EmployeeDAO;
 import harouane.u5w2d5weeklyproject.DTOs.EmployeePayload;
 import harouane.u5w2d5weeklyproject.Entities.Employee;
@@ -11,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +25,9 @@ public class EmployeeService {
 
     @Autowired
     EmployeeDAO employeeDAO;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
     public Page<Employee> getAll(int page, int size, String orderBy) {
         if(size>100) size=100;
         Pageable pageable= PageRequest.of(page, size, Sort.by(orderBy));
@@ -68,4 +75,11 @@ public class EmployeeService {
         employeeDAO.delete(employee);
     }
 
+    public Employee uploadImage(MultipartFile image, int id) throws IOException {
+        String url = (String) cloudinaryUploader.uploader().upload(image.getBytes(),
+                ObjectUtils.emptyMap()).get("url");
+        Employee employee=findById(id);
+        employee.setAvatar(url);
+        return employeeDAO.save(employee);
+    }
 }

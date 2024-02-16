@@ -12,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.service.annotation.PatchExchange;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/employees")
@@ -64,6 +67,11 @@ public class EmployeeController {
             @PathVariable int deviceId
     ){
       return deviceService.setNewOwner(deviceId, employeeId);
+    }
+
+    @PostMapping("/{id}/upload")
+    Employee uploadImgOfAvatar(@RequestParam("avatar") MultipartFile image, @PathVariable int id) throws IOException {
+        return this.employeeService.uploadImage(image, id);
     }
 
 }
